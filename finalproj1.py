@@ -8,8 +8,8 @@ I have not given my code to any student. """
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
-import seaborn as sns
-import matplotlib.pyplot as plt
+#import seaborn as sns
+#import matplotlib.pyplot as plt
 
 
 # [PY3] Error checking with try/except
@@ -151,7 +151,7 @@ elif options == "Map Visualization":
     st.subheader("Line Chart of Elevations")
     st.line_chart(data['elevation_ft'])
 
-    # [SEABORN] Scatter Plot - Elevation vs Latitude
+    '''# [SEABORN] Scatter Plot - Elevation vs Latitude
     # Learned about Seaborn through data analytics internship during the summer
     st.subheader("Elevation vs Latitude (Scatter Plot)")
     plt.figure(figsize=(10, 6))
@@ -160,7 +160,7 @@ elif options == "Map Visualization":
     plt.xlabel("Latitude (degrees)")
     plt.ylabel("Elevation (ft)")
     st.pyplot(plt)
-
+    '''
 # [ST4] Page styling
 st.markdown("""
 <style>
