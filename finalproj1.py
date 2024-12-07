@@ -8,6 +8,8 @@ I have not given my code to any student. """
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 # [PY3] Error checking with try/except
@@ -29,6 +31,7 @@ if not data.empty:
         lambda x: x * 0.3048 if pd.notna(x) and isinstance(x, (int, float)) else None
     )
 
+
 # [PY1] Function with two or more parameters, one with a default value
 def filter_airports_by_type(data, airport_type="small_airport"):
     return data[data['type'] == airport_type]
@@ -38,6 +41,12 @@ def filter_airports_by_type(data, airport_type="small_airport"):
 def elevation_stats(data):
     return data['elevation_ft'].max(), data['elevation_ft'].min(), data['elevation_ft'].mean()
 
+
+# [PY4] List comprehension to create a formatted list of airport names and elevations
+airport_names_elevations = [
+    f"{row['name']} (Elevation: {row['elevation_ft']} ft)"
+    for _, row in data.iterrows() if pd.notna(row['elevation_ft'])
+]
 
 # [ST4] Customized page design features
 st.title("New England Airports Data Explorer")
@@ -109,10 +118,16 @@ elif options == "Airport Queries":
     st.write(f"Airports with Elevation between {min_elevation} and {max_elevation} ft:")
     st.write(filtered_data_elevation)
 
-    # [PY5] Using a dictionary
-    st.subheader("Airport Type Dictionary")
-    airport_type_dict = {row['id']: row['type'] for _, row in data.iterrows()}
-    st.write(f"Airport Types: {list(airport_type_dict.values())[:10]}")  # Display first 10 types
+    # [PY4] Display list comprehension
+    st.subheader("List Comprehension: Airport Names and Elevations")
+    st.write("This list contains airport names and their elevations (where available):")
+
+    # Preview of the first 10
+    st.write(airport_names_elevations[:10])
+
+    # Option to view all items
+    if st.checkbox("Show All Airport Names and Elevations"):
+        st.write(airport_names_elevations)
 
 # Map Visualization
 elif options == "Map Visualization":
@@ -148,6 +163,16 @@ elif options == "Map Visualization":
     # [VIZ3] Line chart visualization
     st.subheader("Line Chart of Elevations")
     st.line_chart(data['elevation_ft'])
+
+    # [SEABORN] Scatter Plot - Elevation vs Latitude
+    # Learned about Seaborn through data analytics internship during the summer
+    st.subheader("Elevation vs Latitude (Scatter Plot)")
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(data=data, x='latitude_deg', y='elevation_ft', hue='type', palette='Set2')
+    plt.title("Elevation vs Latitude")
+    plt.xlabel("Latitude (degrees)")
+    plt.ylabel("Elevation (ft)")
+    st.pyplot(plt)
 
 # [ST4] Page styling
 st.markdown("""
